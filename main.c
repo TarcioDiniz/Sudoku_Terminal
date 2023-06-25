@@ -124,6 +124,7 @@ int main() {
     }
 
     while (true) {
+        system("cls || clear");
         imprimirGrade(&grade);
 
         if (jogoConcluido(&grade)) {
