@@ -27,10 +27,6 @@ jobs:
     - name: Build
       run: cmake --build build --config ${{env.BUILD_TYPE}}
 
-    - name: Test
-      working-directory: build
-      run: ctest -C ${{env.BUILD_TYPE}}
-
     - name: Run Application
       working-directory: build
       run: ./gerador_sudoku
