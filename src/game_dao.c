@@ -1,5 +1,6 @@
 #include "game_dao.h"
 
+
 char diretorio[PATH_MAX];
 
 bool diretorioExiste() {
@@ -24,7 +25,8 @@ bool criarDiretorio() {
 
     snprintf(diretorio, sizeof(diretorio), "%s/%s", diretorioAtual, DIRETORIO_JOGOS);
 
-    if (mkdir(diretorio) != 0) {
+    if (mkdir(diretorio, 0777) != 0) {
+        perror("Erro ao criar o diretorio");
         return false;
     }
 
@@ -37,15 +39,24 @@ bool salvarJogo(const SudokuGrid* grade, const Historico* historico, const char*
 
     FILE* arquivo = fopen(nomeArquivoCompleto, "wb");
     if (arquivo == NULL) {
-        return false; // Não foi possível abrir o arquivo
+        perror("Erro ao abrir o arquivo");
+        return false;
     }
 
     // Escreve os dados do jogo no arquivo
-    fwrite(grade, sizeof(SudokuGrid), 1, arquivo);
+    if (fwrite(grade, sizeof(SudokuGrid), 1, arquivo) != 1) {
+        perror("Erro ao escrever dados no arquivo");
+        fclose(arquivo);
+        return false;
+    }
 
     Jogada* jogadaAtual = historico->primeiro;
     while (jogadaAtual != NULL) {
-        fwrite(jogadaAtual, sizeof(Jogada), 1, arquivo);
+        if (fwrite(jogadaAtual, sizeof(Jogada), 1, arquivo) != 1) {
+            perror("Erro ao escrever dados no arquivo");
+            fclose(arquivo);
+            return false;
+        }
         jogadaAtual = jogadaAtual->proxima;
     }
 
@@ -59,11 +70,16 @@ bool carregarJogo(SudokuGrid* grade, Historico* historico, const char* nomeArqui
 
     FILE* arquivo = fopen(nomeArquivoCompleto, "rb");
     if (arquivo == NULL) {
-        return false; // Não foi possível abrir o arquivo
+        perror("Erro ao abrir o arquivo");
+        return false;
     }
 
     // Lê os dados do jogo do arquivo
-    fread(grade, sizeof(SudokuGrid), 1, arquivo);
+    if (fread(grade, sizeof(SudokuGrid), 1, arquivo) != 1) {
+        perror("Erro ao ler dados do arquivo");
+        fclose(arquivo);
+        return false;
+    }
 
     Jogada jogada;
     while (fread(&jogada, sizeof(Jogada), 1, arquivo) == 1) {
@@ -77,7 +93,7 @@ bool carregarJogo(SudokuGrid* grade, Historico* historico, const char* nomeArqui
 void imprimirListaJogos() {
     DIR* dir = opendir(diretorio);
     if (dir == NULL) {
-        printf("Diretorio de jogos nao encontrado.\n");
+        perror("Erro ao abrir o diretorio");
         return;
     }
 
@@ -107,7 +123,7 @@ bool excluirJogo(const char* nomeArquivo) {
         printf("Arquivo excluido com sucesso.\n");
         return true;
     } else {
-        printf("Falha ao excluir o arquivo.\n");
+        perror("Falha ao excluir o arquivo");
         return false;
     }
 }
