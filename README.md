@@ -32,10 +32,18 @@ Antes de compilar e executar o programa, certifique-se de ter os seguintes itens
 4. Execute o seguinte comando para compilar o programa:
 
    ```bash
-   ./build_linux.sh  # para Linux
-   ./build_mac.sh    # para macOS
-   build_windows.bat # para Windows
+   # Linux
+   build_linux.sh
    ```
+   ```bash
+   # macOS
+   build_mac.sh 
+   ```
+   ```bash
+   # Windows
+   build_windows.bat
+   ```
+   
 
    O comando acima irá compilar o programa e gerar o arquivo executável.
 
