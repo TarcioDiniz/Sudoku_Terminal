@@ -30,3 +30,7 @@ jobs:
     - name: Test
       working-directory: build
       run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Run Application
+      working-directory: build
+      run: ./gerador_sudoku
