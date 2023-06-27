@@ -78,7 +78,7 @@ void limparHistorico(Historico *historico) {
 void imprimirHistorico(Historico *historico) {
     Jogada *jogadaAtual = historico->primeiro;
 
-    printf("Histórico de jogadas:\n");
+    printf("Historico de jogadas:\n");
 
     while (jogadaAtual != NULL) {
         printf("Linha: %d, Coluna: %d, Valor: %d\n", jogadaAtual->linha, jogadaAtual->coluna, jogadaAtual->valor);
